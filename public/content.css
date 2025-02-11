@@ -1,0 +1,22 @@
+span.better-search-highlight {
+  background-color: #1fffb8;
+  color: #000;
+}
+span.better-search-highlight.active {
+  background-color: #ff9057;
+  animation-name: backgroundFlickering;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+}
+@keyframes backgroundFlickering {
+  0% {
+    background-color: #ff9057;
+  }
+  50.0% {
+    background-color: #ffad84;
+  }
+  100.0% {
+    background-color: #ff9057;
+  }
+}
