@@ -1,5 +1,18 @@
 <script setup>
-const onSearch = async (searchInputValue) => {
+import { ref } from "vue";
+
+const searchInputValue = ref("");
+let timeoutId = null;
+
+const onSearch = (value) => {
+  clearTimeout(timeoutId);
+
+  timeoutId = setTimeout(() => {
+    executeSearch(value);
+  }, 0);
+};
+
+const executeSearch = async (searchInputValue) => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
@@ -31,15 +44,47 @@ const onSearch = async (searchInputValue) => {
         const walker = document.createTreeWalker(
           node,
           NodeFilter.SHOW_TEXT,
-          null,
+          {
+            acceptNode: (node) => {
+              if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT; // empty text
+              const parent = node.parentNode;
+
+              // skip hidden elements by style
+              const style = window.getComputedStyle(parent);
+              if (style.display === "none" || style.visibility === "hidden") {
+                return NodeFilter.FILTER_REJECT;
+              }
+
+              // skip tags
+              const excludedTags = [
+                "SCRIPT",
+                "STYLE",
+                "NOSCRIPT",
+                "SVG",
+                "META",
+                "LINK",
+                "IFRAME",
+                "EMBED",
+                "OBJECT",
+                "BUTTON",
+                "SELECT",
+                "OPTION",
+                "TEXTAREA",
+                "INPUT",
+              ];
+              if (excludedTags.includes(parent.tagName)) {
+                return NodeFilter.FILTER_REJECT;
+              }
+
+              return NodeFilter.FILTER_ACCEPT;
+            },
+          },
           false
         );
-        let currentNode;
 
+        let currentNode;
         while ((currentNode = walker.nextNode())) {
-          if (currentNode.nodeValue.trim() !== "") {
-            textNodes.push(currentNode);
-          }
+          textNodes.push(currentNode);
         }
 
         return textNodes;
@@ -50,7 +95,7 @@ const onSearch = async (searchInputValue) => {
         let fullText = "";
         const nodesInfo = [];
 
-        // Сборка полной строки текста из всех текстовых узлов
+        // getting text string from text nodes
         textNodes.forEach((node) => {
           nodesInfo.push({
             node: node,
@@ -62,7 +107,7 @@ const onSearch = async (searchInputValue) => {
         const lowerFullText = fullText.toLowerCase();
         let index = 0;
 
-        // Поиск терма в полной строке текста
+        // search in full text
         while ((index = lowerFullText.indexOf(searchTerm, index)) !== -1) {
           const endIndex = index + searchTerm.length;
           const startNodeInfo = nodesInfo.find(
@@ -128,6 +173,7 @@ const onSearch = async (searchInputValue) => {
 <template>
   <div>
     <input
+      v-model="searchInputValue"
       type="text"
       @input="(event) => onSearch(event.target.value)"
       placeholder="Enter your text"
