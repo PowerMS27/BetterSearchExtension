@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "My extension",
+  "name": "Better Search",
   "version": "1.0.0",
   "description": "Just some description about my extension",
   "icons": {
@@ -16,6 +16,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
+      "js": ["search.js"],
       "css": ["content.css"]
     }
   ]
