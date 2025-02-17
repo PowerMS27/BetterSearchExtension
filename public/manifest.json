@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Better Search",
   "version": "1.0.0",
-  "description": "Just some description about my extension",
+  "description": "Better Search extension",
   "icons": {
     "48": "images/logo48.png",
     "128": "images/logo128.png"
