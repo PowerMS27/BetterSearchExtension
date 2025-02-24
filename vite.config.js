@@ -1,7 +1,17 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-})
+  build: {
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        searchOverlay: 'src/utils/search-overlay.js'
+      },
+      output: {
+        entryFileNames: '[name].js'
+      }
+    }
+  }
+});

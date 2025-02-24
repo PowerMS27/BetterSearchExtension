@@ -8,15 +8,18 @@
     "128": "images/logo128.png"
   },
   "host_permissions": ["https://*/*", "http://*/*"],
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "storage"],
   "action": {
     "default_title": "Click Me",
     "default_popup": "index.html"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["search.js"],
+      "js": ["search.js", "main.js"],
       "css": ["content.css"]
     }
   ]
