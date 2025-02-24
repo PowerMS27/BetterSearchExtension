@@ -1,6 +1,8 @@
+console.log("this is search.js");
+
 function highlightText(searchTerm) {
-  console.log('highlightText');
-  
+  console.log("highlightText");
+
   removeHighlights();
 
   if (!searchTerm) {
@@ -21,7 +23,7 @@ function highlightText(searchTerm) {
 }
 
 function getTextNodes(node) {
-  console.log('getTextNodes');
+  console.log("getTextNodes");
   const textNodes = [];
   const walker = document.createTreeWalker(
     node,
@@ -73,7 +75,7 @@ function getTextNodes(node) {
 }
 
 function getHighlightRanges(textNodes, searchTerm) {
-  console.log('getHighlightRanges');
+  console.log("getHighlightRanges");
   const ranges = [];
   let fullText = "";
   const nodesInfo = [];
@@ -95,8 +97,7 @@ function getHighlightRanges(textNodes, searchTerm) {
     const endIndex = index + searchTerm.length;
     const startNodeInfo = nodesInfo.find(
       (info) =>
-        info.start <= index &&
-        index < info.start + info.node.textContent.length
+        info.start <= index && index < info.start + info.node.textContent.length
     );
     const endNodeInfo = nodesInfo.find(
       (info) =>
@@ -124,7 +125,7 @@ function getHighlightRanges(textNodes, searchTerm) {
 }
 
 function wrapRangeInHighlight(range) {
-  console.log('wrapRangeInHighlight');
+  console.log("wrapRangeInHighlight");
   const highlightSpan = document.createElement("span");
   highlightSpan.className = "better-search-highlight";
 
@@ -135,10 +136,8 @@ function wrapRangeInHighlight(range) {
 }
 
 function removeHighlights() {
-  console.log('removeHighlights');
-  const highlights = document.querySelectorAll(
-    "span.better-search-highlight"
-  );
+  console.log("removeHighlights");
+  const highlights = document.querySelectorAll("span.better-search-highlight");
 
   highlights.forEach((span) => {
     const parent = span.parentNode;
@@ -150,16 +149,15 @@ function removeHighlights() {
   });
 }
 
-
 if (!window.betterSearchInjected) {
   window.betterSearchInjected = true;
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "highlight") {
+      console.log('Message received in search.js:', message.value); // Проверка, что сообщение дошло
       highlightText(message.value);
     }
   });
-
+  
   console.log("Better Search injected!");
 }
-
