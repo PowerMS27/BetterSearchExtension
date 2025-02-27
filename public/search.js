@@ -154,10 +154,10 @@ if (!window.betterSearchInjected) {
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "highlight") {
-      console.log('Message received in search.js:', message.value); // Проверка, что сообщение дошло
+      console.log("Message received in search.js:", message.value); // Проверка, что сообщение дошло
       highlightText(message.value);
     }
   });
-  
+
   console.log("Better Search injected!");
 }

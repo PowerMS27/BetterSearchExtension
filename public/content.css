@@ -23,34 +23,36 @@
   align-items: center !important;
   gap: 5px !important;
   background: #2c2c2c !important;
-  border: 1px solid #efefec80 !important;
   border-radius: 6px !important;
   padding: 5px 10px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  height: 40px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
+  height: 50px !important;
   color: #efefec !important;
   transition: all 0.2s ease-in-out !important;
 }
-#better-search-extension:hover {
-  border: 1px solid #efefec !important;
-}
 
 /* search */
-.better-search-extension__search-input {
+#better-search-extension .better-search-extension__search-input {
   flex-grow: 1 !important;
   color: #efefec !important;
-  padding: 10px !important;
+  padding: 8px !important;
   font-size: 14px !important;
   border-radius: 4px !important;
+  transition: all 0.2s ease-in-out !important;
 }
-.better-search-extension__search-input::placeholder {
+#better-search-extension .better-search-extension__search-input:hover {
+  background: #3a3a3a !important;
+}
+#better-search-extension .better-search-extension__search-input::placeholder {
   color: #efefec80 !important;
 }
-.better-search-extension__search-input:focus {
+#better-search-extension .better-search-extension__search-input:focus {
   outline: none !important;
-  border-color: #888 !important;
 }
-.better-search-extension__close-input-button {
+#better-search-extension .better-search-extension__search-input:focus::placeholder {
+  color: transparent !important;
+}
+#better-search-extension .better-search-extension__close-button {
   background: transparent !important;
   border: none !important;
   color: #efefec !important;
@@ -59,9 +61,33 @@
   padding: 0 5px !important;
   opacity: 0.5 !important;
   transition: all 0.2s ease-in-out !important;
+  margin-left: 8px !important;
 }
-.better-search-extension__close-input-button:hover {
+#better-search-extension .better-search-extension__close-button:hover {
   opacity: 1 !important;
+}
+
+/* navigation beetween search results */
+#better-search-extension .better-search-extension__navigation {
+  margin-left: 8px !important;
+}
+#better-search-extension .better-search-extension__navigation button {
+  font-size: 14px !important;
+  cursor: pointer !important;
+  padding: 2px !important;
+  margin: 0 2px 0 2px !important;
+  transition: all 0.2s ease-in-out !important;
+}
+#better-search-extension .better-search-extension__navigation button.disabled {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+#better-search-extension .better-search-extension__navigation-numbers {
+  display: inline-flex !important;
+  justify-content: center !important;
+  width: 60px !important;
+  font-size: 10px !important;
+  margin-left: 4px !important;
 }
 
 /* hightlights styles */

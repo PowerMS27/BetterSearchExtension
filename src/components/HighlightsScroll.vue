@@ -82,10 +82,25 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <div style="position: fixed">
-    <button @click="scrollToPrevious">Вверх</button>
-    <button @click="scrollToNext">Вниз</button>
-    <div v-if="highlights.length">
+  <div class="better-search-extension__navigation">
+    <button
+      class="better-search-extension__navigation-previous"
+      :class="{'disabled': !highlights.length}"
+      @click="scrollToPrevious"
+    >
+      ⬆
+    </button>
+    <button
+      class="better-search-extension__navigation-next"
+      :class="{'disabled': !highlights.length}"
+      @click="scrollToNext"
+    >
+      ⬇
+    </button>
+    <div
+      class="better-search-extension__navigation-numbers"
+      v-if="highlights.length"
+    >
       {{ currentIndex + 1 }} / {{ highlights.length }}
     </div>
   </div>
