@@ -94,6 +94,9 @@
 span.better-search-highlight {
   background-color: #1fffb8;
   color: #000;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0;
+  text-rendering: optimizeLegibility;
 }
 span.better-search-highlight.active {
   background-color: #ff9057;

@@ -15,7 +15,7 @@ const updateHighlights = () => {
 const scrollToElement = (index) => {
   if (highlights.value[index]) {
     highlights.value[index].scrollIntoView({
-      behavior: "smooth",
+      behavior: "instant",
       block: "center",
     });
   }
