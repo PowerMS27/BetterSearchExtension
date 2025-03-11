@@ -1,6 +1,7 @@
 console.log("this is search.js");
 
 function highlightText(searchTerm) {
+  const start = Date.now();
   console.log("highlightText");
 
   removeHighlights();
@@ -20,41 +21,35 @@ function highlightText(searchTerm) {
       console.error("Failed to create valid range:", e);
     }
   });
+  console.log(`Time elapsed: ${Date.now() - start} ms`);
 }
 
 function getTextNodes(node) {
   console.log("getTextNodes");
   const textNodes = [];
+
+  function isHidden(element) {
+    if (!(element instanceof Element)) return false; // if DOM el
+    const style = window.getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden") {
+      return true;
+    }
+    return isHidden(element.parentNode); // check parents recursively
+  }  
+
   const walker = document.createTreeWalker(
     node,
     NodeFilter.SHOW_TEXT,
     {
       acceptNode: (node) => {
-        if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT; // empty text
         const parent = node.parentNode;
+        if (isHidden(parent)) return NodeFilter.FILTER_REJECT; // hidden parents
 
-        // skip hidden elements by style
-        const style = window.getComputedStyle(parent);
-        if (style.display === "none" || style.visibility === "hidden") {
-          return NodeFilter.FILTER_REJECT;
-        }
-
-        // skip tags
+        // unwanted tags
         const excludedTags = [
-          "SCRIPT",
-          "STYLE",
-          "NOSCRIPT",
-          "SVG",
-          "META",
-          "LINK",
-          "IFRAME",
-          "EMBED",
-          "OBJECT",
-          "BUTTON",
-          "SELECT",
-          "OPTION",
-          "TEXTAREA",
-          "INPUT",
+          "SCRIPT", "STYLE", "NOSCRIPT", "SVG", "META", "LINK",
+          "IFRAME", "EMBED", "OBJECT", "BUTTON", "SELECT",
+          "OPTION"
         ];
         if (excludedTags.includes(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
@@ -129,7 +124,7 @@ function wrapRangeInHighlight(range) {
   const highlightSpan = document.createElement("span");
   highlightSpan.className = "better-search-highlight";
 
-  // Используем DocumentFragment для безопасной работы с DOM
+  // DocumentFragment working with DOM
   const fragment = range.extractContents();
   highlightSpan.appendChild(fragment);
   range.insertNode(highlightSpan);
@@ -154,7 +149,7 @@ if (!window.betterSearchInjected) {
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "highlight") {
-      console.log("Message received in search.js:", message.value); // Проверка, что сообщение дошло
+      console.log("Message received in search.js:", message.value);
       highlightText(message.value);
     }
   });
