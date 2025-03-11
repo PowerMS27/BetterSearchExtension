@@ -42,8 +42,6 @@ function getTextNodes(node) {
     NodeFilter.SHOW_TEXT,
     {
       acceptNode: (node) => {
-        if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT; // empty text
-
         const parent = node.parentNode;
         if (isHidden(parent)) return NodeFilter.FILTER_REJECT; // hidden parents
 
