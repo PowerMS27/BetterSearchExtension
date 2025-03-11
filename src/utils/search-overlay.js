@@ -7,7 +7,7 @@ export function initSearchOverlay() {
   console.log('initSearchOverlay()');
   document.addEventListener("keydown", (event) => {
     console.log('keydown event:', event);
-    if (event.ctrlKey && event.shiftKey && event.key === "F") {
+    if (event.ctrlKey && event.shiftKey && event.code === "KeyF") {
       event.preventDefault();
       console.log('ctrl + shift + f');
 
