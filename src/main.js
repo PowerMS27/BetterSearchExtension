@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
-import { initSearchOverlay } from './utils/search-overlay';
+import { initSearchOverlay } from './content-scripts/search-overlay';
+import './content-scripts/search'
 
 createApp(App).mount('#app');
 

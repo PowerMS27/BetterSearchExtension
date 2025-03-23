@@ -1,6 +1,6 @@
-console.log("this is search.js");
+console.log("this is search-logic.js");
 
-function highlightText(searchTerm) {
+export function highlightText(searchTerm) {
   const start = Date.now();
   console.log("highlightText");
 
@@ -24,7 +24,7 @@ function highlightText(searchTerm) {
   console.log(`Time elapsed: ${Date.now() - start} ms`);
 }
 
-function getTextNodes(node) {
+export function getTextNodes(node) {
   console.log("getTextNodes");
   const textNodes = [];
 
@@ -69,7 +69,7 @@ function getTextNodes(node) {
   return textNodes;
 }
 
-function getHighlightRanges(textNodes, searchTerm) {
+export function getHighlightRanges(textNodes, searchTerm) {
   console.log("getHighlightRanges");
   const ranges = [];
   let fullText = "";
@@ -119,7 +119,7 @@ function getHighlightRanges(textNodes, searchTerm) {
   return ranges;
 }
 
-function wrapRangeInHighlight(range) {
+export function wrapRangeInHighlight(range) {
   console.log("wrapRangeInHighlight");
   const highlightSpan = document.createElement("span");
   highlightSpan.className = "better-search-highlight";
@@ -130,7 +130,7 @@ function wrapRangeInHighlight(range) {
   range.insertNode(highlightSpan);
 }
 
-function removeHighlights() {
+export function removeHighlights() {
   console.log("removeHighlights");
   const highlights = document.querySelectorAll("span.better-search-highlight");
 
@@ -142,17 +142,4 @@ function removeHighlights() {
     parent.removeChild(span);
     parent.normalize();
   });
-}
-
-if (!window.betterSearchInjected) {
-  window.betterSearchInjected = true;
-
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.action === "highlight") {
-      console.log("Message received in search.js:", message.value);
-      highlightText(message.value);
-    }
-  });
-
-  console.log("Better Search injected!");
 }
