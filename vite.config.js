@@ -1,17 +1,17 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
   plugins: [vue()],
   build: {
     rollupOptions: {
       input: {
-        main: 'index.html',
-        searchOverlay: 'src/utils/search-overlay.js'
+        main: "src/main.js",
       },
       output: {
-        entryFileNames: '[name].js'
-      }
-    }
-  }
+        entryFileNames: "content-bundle.js",
+        format: "iife",
+      },
+    },
+  },
 });

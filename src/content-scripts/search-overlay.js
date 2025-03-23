@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import SearchOverlay from "../components/SearchOverlay.vue";
 
-console.log('utils/search-overlay.js');
+console.log('content-scripts/search-overlay.js');
 
 export function initSearchOverlay() {
   console.log('initSearchOverlay()');
