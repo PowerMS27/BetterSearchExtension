@@ -160,4 +160,20 @@ describe("highlightText", () => {
       false
     );
   });
+
+  // Special chars should be found
+  it("search with nested elements", () => {
+    testFunction(
+      `<div>div<span>span</span></div>`,
+      `<div><span class="better-search-highlight">div<span>spa</span></span><span>n</span></div>`,
+      "divspa",
+      false
+    );
+    testFunction(
+      `<div>div<span>span</span></div>`,
+      `<div><span class="better-search-highlight">div<span>span</span></span></div>`,
+      "divspan",
+      false
+    );
+  });
 });
