@@ -1,8 +1,5 @@
-console.log("this is search-logic.js");
-
 export function highlightText(searchTerm) {
   const start = Date.now();
-  console.log("highlightText");
 
   removeHighlights();
 
@@ -25,11 +22,10 @@ export function highlightText(searchTerm) {
 }
 
 export function getTextNodes(node) {
-  console.log("getTextNodes");
   const textNodes = [];
 
   function isHidden(element) {
-    if (!(element instanceof Element)) return false; // if DOM el
+    if (!(element instanceof Element)) return false; // if not DOM el
     const style = window.getComputedStyle(element);
     if (style.display === "none" || style.visibility === "hidden") {
       return true;
@@ -79,7 +75,6 @@ export function getTextNodes(node) {
 }
 
 export function getHighlightRanges(textNodes, searchTerm) {
-  console.log("getHighlightRanges");
   const ranges = [];
   let fullText = "";
   const nodesInfo = [];
@@ -129,7 +124,6 @@ export function getHighlightRanges(textNodes, searchTerm) {
 }
 
 export function wrapRangeInHighlight(range) {
-  console.log("wrapRangeInHighlight");
   const highlightSpan = document.createElement("span");
   highlightSpan.className = "better-search-highlight";
 
@@ -148,7 +142,6 @@ export function wrapRangeInHighlight(range) {
 }
 
 export function removeHighlights() {
-  console.log("removeHighlights");
   const highlights = document.querySelectorAll("span.better-search-highlight");
 
   highlights.forEach((span) => {
