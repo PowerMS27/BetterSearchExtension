@@ -35,7 +35,7 @@ export function getTextNodes(node) {
       return true;
     }
     return isHidden(element.parentNode); // check parents recursively
-  }  
+  }
 
   const walker = document.createTreeWalker(
     node,
@@ -47,9 +47,18 @@ export function getTextNodes(node) {
 
         // unwanted tags
         const excludedTags = [
-          "SCRIPT", "STYLE", "NOSCRIPT", "SVG", "META", "LINK",
-          "IFRAME", "EMBED", "OBJECT", "BUTTON", "SELECT",
-          "OPTION"
+          "SCRIPT",
+          "STYLE",
+          "NOSCRIPT",
+          "SVG",
+          "META",
+          "LINK",
+          "IFRAME",
+          "EMBED",
+          "OBJECT",
+          "BUTTON",
+          "SELECT",
+          "OPTION",
         ];
         if (excludedTags.includes(parent.tagName)) {
           return NodeFilter.FILTER_REJECT;
@@ -128,6 +137,14 @@ export function wrapRangeInHighlight(range) {
   const fragment = range.extractContents();
   highlightSpan.appendChild(fragment);
   range.insertNode(highlightSpan);
+
+  // delete empty node element if there is some
+  if (
+    highlightSpan.nextSibling?.nodeType === Node.ELEMENT_NODE &&
+    highlightSpan.nextSibling.textContent === ""
+  ) {
+    highlightSpan.nextSibling.remove();
+  }
 }
 
 export function removeHighlights() {
@@ -143,3 +160,15 @@ export function removeHighlights() {
     parent.normalize();
   });
 }
+
+// ! alternative function, fixing spliting <span> into symbols but needs time to improve
+// export function removeHighlights() {
+//   const highlights = document.querySelectorAll("span.better-search-highlight");
+//   highlights.forEach((span) => {
+//     const parent = span.parentNode;
+//     const textContent = span.textContent;
+//     const textNode = document.createTextNode(textContent);
+//     parent.replaceChild(textNode, span);
+//     parent.normalize();
+//   });
+// }
