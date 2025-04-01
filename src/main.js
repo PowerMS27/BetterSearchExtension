@@ -3,9 +3,7 @@ import App from './App.vue'
 import { initSearchOverlay } from './content-scripts/search-overlay';
 import './content-scripts/search'
 
-createApp(App).mount('#app');
+createApp(App).mount('#better-search-extension-app');
 
-// Инициализируем функционал поиска
-console.log('initSearchOverlay()');
-
+// search init
 initSearchOverlay();
