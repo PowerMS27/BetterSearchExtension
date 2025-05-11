@@ -39,7 +39,7 @@ export function getTextNodes(node) {
     {
       acceptNode: (node) => {
         const parent = node.parentNode;
-        if (isHidden(parent)) return NodeFilter.FILTER_REJECT; // hidden parents
+        if (isHidden(parent)) return NodeFilter.FILTER_REJECT; // reject hidden parents
 
         // unwanted tags
         const excludedTags = [
@@ -74,18 +74,32 @@ export function getTextNodes(node) {
   return textNodes;
 }
 
+export function getBlockParent(node) {
+  let el = node.parentElement;
+  while (el && window.getComputedStyle(el).display === "inline") {
+    el = el.parentElement;
+  }
+  return el;
+}
+
 export function getHighlightRanges(textNodes, searchTerm) {
   const ranges = [];
   let fullText = "";
   const nodesInfo = [];
 
   // getting text string from text nodes
-  textNodes.forEach((node) => {
+  textNodes.forEach((node, index) => {
+    let text = node.textContent;
+  
+    // remove spaces at inline items
+    if (index > 0 && fullText[fullText.length - 1] === ' ' && text[0] === ' ') {
+      text = text.slice(1); // remove space
+    }
     nodesInfo.push({
       node: node,
       start: fullText.length,
     });
-    fullText += node.textContent;
+    fullText += text;
   });
 
   const lowerFullText = fullText.toLowerCase();
@@ -105,6 +119,15 @@ export function getHighlightRanges(textNodes, searchTerm) {
     );
 
     if (startNodeInfo && endNodeInfo) {
+      const startBlock = getBlockParent(startNodeInfo.node);
+      const endBlock = getBlockParent(endNodeInfo.node);
+    
+      // range in different blocks - skip
+      if (startBlock !== endBlock) {
+        index = endIndex;
+        continue;
+      }
+    
       const range = document.createRange();
       const startOffset = index - startNodeInfo.start;
       const endOffset = endIndex - endNodeInfo.start;
