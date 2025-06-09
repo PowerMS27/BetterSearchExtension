@@ -7,6 +7,15 @@ describe("highlightText", () => {
     document.body.innerHTML = ""; // clear DOM
     container = document.createElement("div");
     document.body.appendChild(container);
+
+    // style for inline (span etc)
+    const style = document.createElement("style");
+    style.innerHTML = `
+      span {
+        display: inline;
+      }
+    `;
+    document.head.appendChild(style);
   });
 
   /**
@@ -161,7 +170,7 @@ describe("highlightText", () => {
     );
   });
 
-  // Special chars should be found
+  // Search with nested elements
   it("search with nested elements", () => {
     testFunction(
       `<div>div<span>span</span></div>`,
@@ -170,9 +179,9 @@ describe("highlightText", () => {
       false
     );
     testFunction(
-      `<div>div<span>span</span></div>`,
-      `<div><span class="better-search-highlight">div<span>span</span></span></div>`,
-      "divspan",
+      `<div>div <span>span<span> span in span</span></span></div>`,
+      `<div><span class="better-search-highlight">div <span>span<span> span in</span></span></span><span><span> span</span></span></div>`,
+      "div span span in",
       false
     );
   });
