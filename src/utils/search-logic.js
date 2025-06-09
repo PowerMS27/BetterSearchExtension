@@ -176,15 +176,3 @@ export function removeHighlights() {
     parent.normalize();
   });
 }
-
-// ! alternative function, fixing spliting <span> into symbols but needs time to improve
-// export function removeHighlights() {
-//   const highlights = document.querySelectorAll("span.better-search-highlight");
-//   highlights.forEach((span) => {
-//     const parent = span.parentNode;
-//     const textContent = span.textContent;
-//     const textNode = document.createTextNode(textContent);
-//     parent.replaceChild(textNode, span);
-//     parent.normalize();
-//   });
-// }
