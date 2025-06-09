@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: 20.10.0
 
-      - name: Clean install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm bug)
+        run: npm install
 
       - name: Run Unit Tests
         run: npm run test
@@ -41,8 +41,8 @@ jobs:
         with:
           node-version: 20.10.0
 
-      - name: Clean install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm bug)
+        run: npm install
 
       - name: Build project
         run: npm run build
