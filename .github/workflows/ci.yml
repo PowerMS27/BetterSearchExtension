@@ -57,9 +57,6 @@ jobs:
       - name: Extract node_modules
         run: tar -xzf node_modules.tar.gz
 
-      - name: Run postinstall scripts
-        run: npm run postinstall
-
       - name: Run Unit Tests
         run: npm run test
 
