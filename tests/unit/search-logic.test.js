@@ -178,5 +178,11 @@ describe("highlightText", () => {
       "divspa",
       false
     );
+    testFunction(
+      `<div>div <span>span<span> span in span</span></span></div>`,
+      `<div><span class="better-search-highlight">div <span>span<span> span in</span></span></span><span><span> span</span></span></div>`,
+      "div span span in",
+      false
+    );
   });
 });
