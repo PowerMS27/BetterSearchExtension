@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { highlightText } from "../../src/utils/search-logic";
+import { highlightText } from "@/utils/search-logic";
 
 describe("highlightText", () => {
   let container;

@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import SearchOverlay from "../components/SearchOverlay.vue";
+import SearchOverlay from "@/components/SearchOverlay.vue";
 
 export function initSearchOverlay() {
   document.addEventListener("keydown", (event) => {

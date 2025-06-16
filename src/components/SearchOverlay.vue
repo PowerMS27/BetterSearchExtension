@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import HighlightsScroll from "./HighlightsScroll.vue";
+import HighlightsScroll from "@/components/HighlightsScroll.vue";
+import SvgButtonClose from "@/assets/icons/button-close.svg";
 
 const searchText = ref("");
 
@@ -42,7 +43,7 @@ function closeSearch() {
     />
     <HighlightsScroll />
     <button class="better-search-extension__close-button" @click="closeSearch">
-      ✖
+      <SvgButtonClose />
     </button>
   </div>
 </template>
