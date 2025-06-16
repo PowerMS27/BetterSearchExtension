@@ -90,9 +90,9 @@ export function getHighlightRanges(textNodes, searchTerm) {
   // getting text string from text nodes
   textNodes.forEach((node, index) => {
     let text = node.textContent;
-  
+
     // remove spaces at inline items
-    if (index > 0 && fullText[fullText.length - 1] === ' ' && text[0] === ' ') {
+    if (index > 0 && fullText[fullText.length - 1] === " " && text[0] === " ") {
       text = text.slice(1); // remove space
     }
     nodesInfo.push({
@@ -121,13 +121,13 @@ export function getHighlightRanges(textNodes, searchTerm) {
     if (startNodeInfo && endNodeInfo) {
       const startBlock = getBlockParent(startNodeInfo.node);
       const endBlock = getBlockParent(endNodeInfo.node);
-    
+
       // range in different blocks - skip
       if (startBlock !== endBlock) {
         index = endIndex;
         continue;
       }
-    
+
       const range = document.createRange();
       const startOffset = index - startNodeInfo.start;
       const endOffset = endIndex - endNodeInfo.start;

@@ -1,4 +1,4 @@
-import { highlightText } from "../utils/search-logic";
+import { highlightText } from "@/utils/search-logic";
 
 if (!window.betterSearchInjected) {
   window.betterSearchInjected = true;
