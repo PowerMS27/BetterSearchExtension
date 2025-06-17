@@ -1,25 +1,34 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import HighlightsScroll from "@/components/HighlightsScroll.vue";
 import SvgButtonClose from "@/assets/icons/button-close.svg";
+import { debounce } from "@/utils/debounce-throttle.js";
 
 const searchText = ref("");
 
 onMounted(() => {
-  const input = document.querySelector(".better-search-extension__search-input");
+  const input = document.querySelector(
+    ".better-search-extension__search-input"
+  );
   if (input) {
     input.focus();
   }
 });
 
-function onInputChange() {
+const onInputChange = () => {
   chrome.runtime.sendMessage({
     action: "highlight",
     value: searchText.value,
   });
-}
+};
 
-function closeSearch() {
+const debouncedInputChange = debounce(onInputChange, 300);
+
+watch(searchText, () => {
+  debouncedInputChange();
+});
+
+const closeSearch = () => {
   const container = document.querySelector("#better-search-extension");
   if (container) {
     chrome.runtime.sendMessage({
@@ -28,7 +37,7 @@ function closeSearch() {
     });
     container.remove();
   }
-}
+};
 </script>
 
 <template>
@@ -38,7 +47,6 @@ function closeSearch() {
       type="text"
       placeholder="Search..."
       v-model="searchText"
-      @input="onInputChange"
       @keydown.escape="closeSearch"
     />
     <HighlightsScroll />

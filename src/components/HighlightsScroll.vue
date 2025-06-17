@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import SvgButtonPrevios from "@/assets/icons/button-previous.svg";
 import SvgButtonNext from "@/assets/icons/button-next.svg";
+import { throttle, debounce } from "@/utils/debounce-throttle.js";
 
 const currentIndex = ref(0);
 const highlights = ref([]);
@@ -39,10 +40,11 @@ const adjustOverlayIfOverlapping = () => {
   }
 };
 
+const throttledAdjust = throttle(adjustOverlayIfOverlapping, 100);
+const debouncedAdjust = debounce(adjustOverlayIfOverlapping, 200);
+
 // highlights refresh
 const updateHighlights = () => {
-  console.log('@@@ updateHighlights !!!');
-  
   highlights.value = Array.from(
     document.querySelectorAll("span.better-search-highlight")
   );
@@ -111,14 +113,14 @@ onMounted(() => {
     childList: true,
     subtree: true,
   });
-  window.addEventListener("scroll", adjustOverlayIfOverlapping);
-  window.addEventListener("resize", adjustOverlayIfOverlapping);
+  window.addEventListener("scroll", throttledAdjust);
+  window.addEventListener("resize", debouncedAdjust);
 });
 
 onBeforeUnmount(() => {
   observer.disconnect();
-  window.removeEventListener("scroll", adjustOverlayIfOverlapping);
-  window.removeEventListener("resize", adjustOverlayIfOverlapping);
+  window.removeEventListener("scroll", throttledAdjust);
+  window.removeEventListener("resize", debouncedAdjust);
 });
 </script>
 <template>
