@@ -111,10 +111,14 @@ onMounted(() => {
     childList: true,
     subtree: true,
   });
+  window.addEventListener("scroll", adjustOverlayIfOverlapping);
+  window.addEventListener("resize", adjustOverlayIfOverlapping);
 });
 
 onBeforeUnmount(() => {
   observer.disconnect();
+  window.removeEventListener("scroll", adjustOverlayIfOverlapping);
+  window.removeEventListener("resize", adjustOverlayIfOverlapping);
 });
 </script>
 <template>
