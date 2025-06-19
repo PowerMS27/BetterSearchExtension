@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { throttle, debounce } from "@/utils/debounce-throttle.js";
+import { isElementInViewport } from "@/utils/is-element-in-viewport";
+import { eventBus } from "@/utils/event-bus.js";
 import SvgButtonPrevios from "@/assets/icons/button-previous.svg";
 import SvgButtonNext from "@/assets/icons/button-next.svg";
-import { throttle, debounce } from "@/utils/debounce-throttle.js";
 
 const currentIndex = ref(0);
 const highlights = ref([]);
@@ -11,18 +13,17 @@ const defaultTop = 10;
 const adjustOverlayIfOverlapping = () => {
   const overlay = document.getElementById("better-search-extension");
   const current = highlights.value[currentIndex.value];
+
   if (!overlay || !current) return;
 
   const overlayHeight = overlay.offsetHeight;
   const targetRect = current.getBoundingClientRect();
-
   const overlayRectAtDefault = {
     top: defaultTop,
     bottom: defaultTop + overlayHeight,
     left: window.innerWidth - overlay.offsetWidth - 100,
     right: window.innerWidth - 100,
   };
-
   const wouldOverlap =
     targetRect.top < overlayRectAtDefault.bottom &&
     targetRect.bottom > overlayRectAtDefault.top &&
@@ -43,27 +44,21 @@ const adjustOverlayIfOverlapping = () => {
 const throttledAdjust = throttle(adjustOverlayIfOverlapping, 100);
 const debouncedAdjust = debounce(adjustOverlayIfOverlapping, 200);
 
-// highlights refresh
-const updateHighlights = () => {
-  highlights.value = Array.from(
-    document.querySelectorAll("span.better-search-highlight")
-  );
-  adjustOverlayIfOverlapping();
-};
-
-// scroll to result by index
+// scroll to result by index if not in viewport
 const scrollToElement = (index) => {
-  if (highlights.value[index]) {
-    highlights.value[index].scrollIntoView({
+  const element = highlights.value[index];
+  if (element && !isElementInViewport(element)) {
+    element.scrollIntoView({
       behavior: "instant",
       block: "center",
     });
-    adjustOverlayIfOverlapping();
   }
+  adjustOverlayIfOverlapping();
 };
 
 // add class 'active'
 const setActiveClass = (index) => {
+  if (highlights.value.length === 0) return;
   highlights.value.forEach((highlight, i) => {
     if (i === index) {
       highlight.classList.add("active");
@@ -99,26 +94,27 @@ const scrollToPrevious = () => {
   setActiveClass(currentIndex.value);
 };
 
-const observer = new MutationObserver(() => {
-  updateHighlights();
-  setActiveClass(currentIndex.value);
+eventBus.on("highlights-updated", (updatedHighlights) => {
+  highlights.value = updatedHighlights;
+  currentIndex.value = 0;
+
+  // scroll to active highlight if not in viewport
+  const currentEl = updatedHighlights[0];
+  if (currentEl && !isElementInViewport(currentEl)) {
+    scrollToElement(0);
+  }
+
+  setActiveClass(0);
+  adjustOverlayIfOverlapping();
 });
 
 onMounted(() => {
-  updateHighlights();
-
   setActiveClass(currentIndex.value);
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
   window.addEventListener("scroll", throttledAdjust);
   window.addEventListener("resize", debouncedAdjust);
 });
 
 onBeforeUnmount(() => {
-  observer.disconnect();
   window.removeEventListener("scroll", throttledAdjust);
   window.removeEventListener("resize", debouncedAdjust);
 });

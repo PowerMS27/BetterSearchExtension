@@ -1,9 +1,11 @@
+import { eventBus } from "@/utils/event-bus.js";
+
 export function highlightText(searchTerm) {
   const start = Date.now();
-
   removeHighlights();
 
   if (!searchTerm) {
+    eventBus.emit("highlights-updated", []);
     return;
   }
 
@@ -18,6 +20,11 @@ export function highlightText(searchTerm) {
       console.error("Failed to create valid range:", e);
     }
   });
+
+  eventBus.emit(
+    "highlights-updated",
+    Array.from(document.querySelectorAll("span.better-search-highlight"))
+  );
   console.log(`Time elapsed: ${Date.now() - start} ms`);
 }
 
