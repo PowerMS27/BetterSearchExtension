@@ -1,9 +1,11 @@
+import { eventBus } from "@/utils/event-bus.js";
+
 export function highlightText(searchTerm) {
   const start = Date.now();
-
   removeHighlights();
 
   if (!searchTerm) {
+    eventBus.emit("highlights-updated", []);
     return;
   }
 
@@ -18,6 +20,11 @@ export function highlightText(searchTerm) {
       console.error("Failed to create valid range:", e);
     }
   });
+
+  eventBus.emit(
+    "highlights-updated",
+    Array.from(document.querySelectorAll("span.better-search-highlight"))
+  );
   console.log(`Time elapsed: ${Date.now() - start} ms`);
 }
 
@@ -102,12 +109,26 @@ export function getHighlightRanges(textNodes, searchTerm) {
     fullText += text;
   });
 
+  // $nbsp; as space
+  fullText = fullText.replace(/\u00A0/g, " ");
+  searchTerm = searchTerm.replace(/\u00A0/g, " ");
+
   const lowerFullText = fullText.toLowerCase();
   let index = 0;
 
   // search in full text
   while ((index = lowerFullText.indexOf(searchTerm, index)) !== -1) {
     const endIndex = index + searchTerm.length;
+
+    // skip if no text
+    if (/^\s+$/.test(searchTerm)) {
+      const context = lowerFullText.slice(Math.max(0, index - 1), endIndex + 1);
+      if (!/[^\s]/.test(context)) {
+        index = endIndex;
+        continue;
+      }
+    }
+
     const startNodeInfo = nodesInfo.find(
       (info) =>
         info.start <= index && index < info.start + info.node.textContent.length

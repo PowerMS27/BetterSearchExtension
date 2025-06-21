@@ -158,6 +158,12 @@ describe("highlightText", () => {
       " ",
       false
     );
+    testFunction(
+      `<div>nbsp&nbsp;space</div>`,
+      `<div>nbsp<span class="better-search-highlight">&nbsp;</span>space</div>`,
+      " ",
+      false
+    );
   });
 
   // Special chars should be found
