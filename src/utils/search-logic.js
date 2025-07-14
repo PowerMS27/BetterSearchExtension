@@ -1,6 +1,6 @@
 import { eventBus } from "@/utils/event-bus.js";
 
-export function highlightText(searchTerm) {
+export function highlightText(searchTerm, noScroll) {
   const start = Date.now();
   removeHighlights();
 
@@ -23,7 +23,11 @@ export function highlightText(searchTerm) {
 
   eventBus.emit(
     "highlights-updated",
-    Array.from(document.querySelectorAll("span.better-search-highlight"))
+    {
+      highlights: Array.from(document.querySelectorAll("span.better-search-highlight")),
+      searchTerm: searchTerm,
+      noScroll: noScroll
+    }
   );
   console.log(`Time elapsed: ${Date.now() - start} ms`);
 }

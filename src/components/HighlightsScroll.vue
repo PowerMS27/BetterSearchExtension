@@ -47,24 +47,27 @@ const debouncedAdjust = debounce(adjustOverlayIfOverlapping, 200);
 // scroll to result by index if not in viewport
 const scrollToElement = (index) => {
   const element = highlights.value[index];
-  if (element && !isElementInViewport(element)) {
+  if (!element) return;
+
+  eventBus.emit("pause-observer");
+
+  if (!isElementInViewport(element)) {
     element.scrollIntoView({
       behavior: "instant",
       block: "center",
     });
   }
+
+  setActiveClass(index);
   adjustOverlayIfOverlapping();
+
+  eventBus.emit("resume-observer");
 };
 
 // add class 'active'
 const setActiveClass = (index) => {
-  if (highlights.value.length === 0) return;
   highlights.value.forEach((highlight, i) => {
-    if (i === index) {
-      highlight.classList.add("active");
-    } else {
-      highlight.classList.remove("active");
-    }
+    highlight.classList.toggle("active", i === index);
   });
 };
 
@@ -95,12 +98,16 @@ const scrollToPrevious = () => {
 };
 
 eventBus.on("highlights-updated", (updatedHighlights) => {
-  highlights.value = updatedHighlights;
+  highlights.value = updatedHighlights?.highlights;
   currentIndex.value = 0;
 
   // scroll to active highlight if not in viewport
-  const currentEl = updatedHighlights[0];
-  if (currentEl && !isElementInViewport(currentEl)) {
+  const currentEl = updatedHighlights?.highlights?.[0];
+  if (
+    currentEl &&
+    !isElementInViewport(currentEl) &&
+    !updatedHighlights.noScroll
+  ) {
     scrollToElement(0);
   }
 
@@ -134,14 +141,14 @@ onBeforeUnmount(() => {
     <span class="better-search-extension__breaking-line"></span>
     <div class="better-search-extension__navigation-buttons">
       <button
-        class="better-search-extension__navigation-previous"
+        class="better-search-extension__navigation-button better-search-extension__navigation-previous"
         :class="{ disabled: !highlights.length }"
         @click="scrollToPrevious"
       >
         <SvgButtonPrevios />
       </button>
       <button
-        class="better-search-extension__navigation-next"
+        class="better-search-extension__navigation-button better-search-extension__navigation-next"
         :class="{ disabled: !highlights.length }"
         @click="scrollToNext"
       >
