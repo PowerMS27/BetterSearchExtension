@@ -98,7 +98,7 @@ const scrollToPrevious = () => {
 };
 
 eventBus.on("highlights-updated", (updatedHighlights) => {
-  highlights.value = updatedHighlights?.highlights;
+  highlights.value = updatedHighlights?.highlights || [];
   currentIndex.value = 0;
 
   // scroll to active highlight if not in viewport
