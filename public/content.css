@@ -1,6 +1,9 @@
 /* reset styles */
 #better-search-extension,
-#better-search-extension *:not(svg):not(path):not(polygon):not(g):not(line):not(rect):not(circle):not(ellipse):not(use):not(text) {
+#better-search-extension
+  *:not(svg):not(path):not(polygon):not(g):not(line):not(rect):not(circle):not(
+    ellipse
+  ):not(use):not(text) {
   all: unset;
   box-sizing: border-box;
   font-family: Arial, sans-serif !important;
@@ -23,7 +26,7 @@
   align-items: center !important;
   gap: 5px !important;
   background: #2c2c2c !important;
-  border-radius: 6px !important;
+  border-radius: 6px 6px 6px 0px !important;
   padding: 5px 10px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
   height: 50px !important;
@@ -50,26 +53,20 @@
 #better-search-extension .better-search-extension__search-input:focus {
   outline: none !important;
 }
-#better-search-extension .better-search-extension__search-input:focus::placeholder {
+#better-search-extension
+  .better-search-extension__search-input:focus::placeholder {
   color: transparent !important;
 }
 #better-search-extension .better-search-extension__close-button {
   background: transparent !important;
   border: none !important;
   font-size: 18px !important;
-  cursor: pointer !important;
   padding: 10px 4px !important;
-  opacity: 0.5 !important;
-  transition: all 0.2s ease-in-out !important;
   margin-left: 8px !important;
 }
 #better-search-extension .better-search-extension__close-button svg {
-  fill: #efefec !important;
   width: 10px !important;
   height: 10px !important;
-}
-#better-search-extension .better-search-extension__close-button:hover {
-  opacity: 1 !important;
 }
 
 /* navigation beetween search results */
@@ -86,20 +83,21 @@
 }
 #better-search-extension .better-search-extension__navigation-buttons button {
   font-size: 14px !important;
-  cursor: pointer !important;
   padding: 10px 4px !important;
   margin: 0 4px 0 4px !important;
-  transition: all 0.2s ease-in-out !important;
 }
-#better-search-extension .better-search-extension__navigation-buttons button svg {
+#better-search-extension .better-search-extension__navigation-button {
+  cursor: pointer !important;
+}
+#better-search-extension .better-search-extension__navigation-button svg {
   transition: all 0.2s ease-in-out !important;
   fill: #efefec !important;
   opacity: 0.5 !important;
 }
-#better-search-extension .better-search-extension__navigation-buttons button:hover svg {
+#better-search-extension .better-search-extension__navigation-button:hover svg {
   opacity: 1 !important;
 }
-#better-search-extension .better-search-extension__navigation-buttons button.disabled {
+#better-search-extension .better-search-extension__navigation-button.disabled {
   opacity: 0.2 !important;
   pointer-events: none !important;
 }
@@ -110,6 +108,29 @@
   min-width: 40px !important;
   font-size: 10px !important;
   margin: 0 10px 0 8px !important;
+}
+#better-search-extension .better-search-extension__submenu {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: 0;
+  bottom: -20px;
+  background: #2c2c2c !important;
+  height: 20px;
+  width: 26px;
+  border-radius: 0px 0px 6px 6px;
+  padding: 0 6px;
+}
+#better-search-extension .better-search-extension__update-results button svg {
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+#better-search-extension
+  .better-search-extension__update-results
+  button
+  svg.update-results {
+  fill: #1fffb8 !important;
 }
 
 /* hightlights styles */

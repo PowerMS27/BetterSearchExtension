@@ -12,6 +12,10 @@ export function initSearchOverlay() {
         document.body.appendChild(container);
         const app = createApp(SearchOverlay);
         app.mount(container);
+      } else {
+        document
+          .querySelector(".better-search-extension__search-input")
+          ?.focus();
       }
     }
   });

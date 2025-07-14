@@ -1,42 +1,65 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import {
+  startAutoSearchUpdates,
+  stopAutoSearchUpdates,
+} from "@/utils/update-search-results.js";
+import { getSiteSetting, setSiteSetting } from "@/utils/chrome-storage.js";
+import { debounce } from "@/utils/debounce-throttle.js";
 import HighlightsScroll from "@/components/HighlightsScroll.vue";
 import SvgButtonClose from "@/assets/icons/button-close.svg";
-import { debounce } from "@/utils/debounce-throttle.js";
+import SvgButtonUpdate from "@/assets/icons/button-update.svg";
+import SvgButtonUpdateCanceled from "@/assets/icons/button-update-canceled.svg";
 
 const searchText = ref("");
+const isAutoSearchUpdates = ref(false);
 
-onMounted(() => {
+// Focus on search input and load saved auto-update setting
+onMounted(async () => {
   const input = document.querySelector(
     ".better-search-extension__search-input"
   );
-  if (input) {
-    input.focus();
+  input?.focus();
+
+  const savedValue = await getSiteSetting("isAutoSearchUpdates");
+  if (savedValue !== null) {
+    isAutoSearchUpdates.value = savedValue;
   }
 });
 
-const onInputChange = () => {
-  chrome.runtime.sendMessage({
-    action: "highlight",
-    value: searchText.value,
+onBeforeUnmount(() => {
+  stopAutoSearchUpdates();
+});
+
+const sendHighlightMessage = (text) => {
+  chrome.runtime.sendMessage({ action: "highlight", value: text }, () => {
+    if (chrome.runtime.lastError) {
+      console.warn("Message error:", chrome.runtime.lastError.message);
+    }
   });
 };
 
-const debouncedInputChange = debounce(onInputChange, 300);
+const debouncedInputChange = debounce(() => {
+  sendHighlightMessage(searchText.value);
+}, 300);
 
-watch(searchText, () => {
-  debouncedInputChange();
+watch(searchText, debouncedInputChange);
+
+watch(isAutoSearchUpdates, (newVal) => {
+  setSiteSetting("isAutoSearchUpdates", newVal);
+  newVal ? startAutoSearchUpdates() : stopAutoSearchUpdates();
 });
 
 const closeSearch = () => {
   const container = document.querySelector("#better-search-extension");
-  if (container) {
-    chrome.runtime.sendMessage({
-      action: "highlight",
-      value: "",
-    });
-    container.remove();
-  }
+  if (!container) return;
+
+  sendHighlightMessage("");
+  container.remove();
+};
+
+const autoSearchUpdatesToggle = () => {
+  isAutoSearchUpdates.value = !isAutoSearchUpdates.value;
 };
 </script>
 
@@ -45,13 +68,29 @@ const closeSearch = () => {
     <input
       class="better-search-extension__search-input"
       type="text"
-      placeholder="Search..."
       v-model="searchText"
       @keydown.escape="closeSearch"
     />
     <HighlightsScroll />
-    <button class="better-search-extension__close-button" @click="closeSearch">
+    <button
+      class="better-search-extension__navigation-button better-search-extension__close-button"
+      @click="closeSearch"
+    >
       <SvgButtonClose />
     </button>
+    <div class="better-search-extension__submenu">
+      <div class="better-search-extension__update-results">
+        <button
+          @click="autoSearchUpdatesToggle"
+          class="better-search-extension__navigation-button"
+        >
+          <SvgButtonUpdateCanceled
+            class="update-results--canceled"
+            v-if="!isAutoSearchUpdates"
+          />
+          <SvgButtonUpdate class="update-results" v-else />
+        </button>
+      </div>
+    </div>
   </div>
 </template>

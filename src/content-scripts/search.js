@@ -5,7 +5,8 @@ if (!window.betterSearchInjected) {
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "highlight") {
-      highlightText(message.value);
+      const noScroll = !!message.noScroll
+      highlightText(message.value, noScroll);
     }
   });
 }
