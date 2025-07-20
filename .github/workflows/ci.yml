@@ -30,8 +30,8 @@ jobs:
 
       - name: Install dependencies (with rollup fix)
         run: |
-          npm install --no-optional
-          npm rebuild
+          npm install --ignore-scripts
+          npm install @rollup/rollup-linux-x64-gnu --no-save
 
       - name: Run Unit Tests
         run: npm run test
@@ -57,8 +57,8 @@ jobs:
 
       - name: Install dependencies (with rollup fix)
         run: |
-          npm install --no-optional
-          npm rebuild
+          npm install --ignore-scripts
+          npm install @rollup/rollup-linux-x64-gnu --no-save
 
       - name: Build project
         run: npm run build
