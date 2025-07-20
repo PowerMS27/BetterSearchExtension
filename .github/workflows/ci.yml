@@ -17,19 +17,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Clean installation environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm cache clean --force
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'  # Кэшируем node_modules для ускорения
 
-      - name: Install dependencies
+      - name: Install dependencies (with rollup fix)
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+          npm install --no-optional
+          npm rebuild
 
       - name: Run Unit Tests
         run: npm run test
@@ -42,19 +44,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Clean installation environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm cache clean --force
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install dependencies (with rollup fix)
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+          npm install --no-optional
+          npm rebuild
 
       - name: Build project
         run: npm run build
